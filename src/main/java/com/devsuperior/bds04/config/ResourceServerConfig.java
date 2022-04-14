@@ -19,7 +19,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		
 	private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**", "/cities/**", "/events/**" };
 	
-//	private static final String[] CLIENT_OR_ADMIN = { "/cities/**", "/events/**" };
+	private static final String[] CLIENT = { "/events/**" };
 	
 	private static final String[] ADMIN = {"/cities/**" };
 	
@@ -33,8 +33,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, PUBLIC).permitAll()
+		.antMatchers(HttpMethod.POST, CLIENT).hasAnyRole("CLIENT", "ADMIN")
 		.antMatchers(HttpMethod.POST, ADMIN).hasAnyRole("ADMIN")
-		.anyRequest().authenticated();
+		.anyRequest().hasAnyRole("ADMIN");
 	}
 	
 }
